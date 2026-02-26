@@ -352,11 +352,11 @@ export function App(){
       <div onClick={async()=>{try{window.open("https://apps.apple.com/account/subscriptions","_blank")}catch{}showTst("Opening subscription management...")}} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 0",cursor:"pointer"}}><span style={{fontSize:14,color:C.t2}}>Manage Subscription</span>{Ic.right(16,C.t5)}</div>
     </Card>
     <Card style={{marginBottom:12}}>
-      {[["Privacy Policy","https://autolens.app/privacy"],["Terms of Service","https://autolens.app/terms"],["End User License Agreement","https://autolens.app/eula"],["Contact Support","mailto:support@autolens.app"],["Rate on App Store","https://apps.apple.com/app/autolens/id0000000000?action=write-review"]].map(([l,url],i,a)=>(
+      {[["Privacy Policy","https://autolens.app/privacy"],["Terms of Service","https://autolens.app/terms"],["End User License Agreement","https://autolens.app/eula"],["Contact Support","mailto:support@autolens.app"],["Rate on App Store","https://apps.apple.com/app/autolens/id6759729366?action=write-review"]].map(([l,url],i,a)=>(
         <div key={i} onClick={()=>{window.open(url,"_blank")}} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 0",borderBottom:i<a.length-1?`1px solid ${C.border}`:"none",cursor:"pointer"}}><span style={{fontSize:14,color:C.t2}}>{l}</span>{Ic.right(16,C.t5)}</div>
       ))}
     </Card>
-    <div style={{textAlign:"center",padding:"12px 0"}}><div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginBottom:4}}><CarLogo size={18} color={C.t4}/><span style={{fontSize:13,color:C.t4,fontWeight:600}}>AutoLens</span></div><span style={{fontSize:12,color:C.t5}}>Version 2.0.0</span></div>
+    <div style={{textAlign:"center",padding:"12px 0"}}><div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginBottom:4}}><CarLogo size={18} color={C.t4}/><span style={{fontSize:13,color:C.t4,fontWeight:600}}>AutoLens</span></div><span style={{fontSize:12,color:C.t5}}>Version 1.0.0</span></div>
   </Shell>);}
   /* ═══ QUIZ FLOW ═══ */
   if(qStep>=0){
