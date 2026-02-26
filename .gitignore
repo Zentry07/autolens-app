@@ -1,0 +1,23 @@
+node_modules
+dist
+.env
+.env.local
+*.local
+.DS_Store
+
+# Capacitor
+ios/App/Pods
+ios/App/App/public
+ios/App/App/capacitor.config.json
+ios/App/App/config.xml
+ios/capacitor-cordova-ios-plugins
+android/app/src/main/assets/public
+
+# Xcode
+ios/DerivedData
+*.xcuserdata
+*.xcworkspace/xcuserdata
+
+# IDE
+.vscode
+.idea
