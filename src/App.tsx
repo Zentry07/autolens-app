@@ -311,9 +311,9 @@ export function App(){
     <p style={{textAlign:"center",color:C.t4,fontSize:11,marginTop:10}}>Cancel anytime · No charge for 7 days · {plan==="yr"?"$99/year after trial":"$10/month after trial"}</p>
     <p style={{textAlign:"center",color:C.t5,fontSize:10,marginTop:6,lineHeight:1.5,padding:"0 10px"}}>Subscription automatically renews unless canceled at least 24 hours before the end of the current period. Your Apple ID account will be charged for renewal within 24 hours prior to the end of the current period. You can manage and cancel subscriptions in your Account Settings on the App Store. Free trial converts to paid subscription.</p>
     <div style={{display:"flex",justifyContent:"center",gap:12,marginTop:10}}>
-      <button onClick={()=>window.open("https://autolens.app/privacy","_blank")} style={{background:"none",border:"none",color:C.t4,fontSize:11,fontWeight:500,textDecoration:"underline"}}>Privacy</button>
-      <button onClick={()=>window.open("https://autolens.app/terms","_blank")} style={{background:"none",border:"none",color:C.t4,fontSize:11,fontWeight:500,textDecoration:"underline"}}>Terms</button>
-      <button onClick={()=>window.open("https://autolens.app/eula","_blank")} style={{background:"none",border:"none",color:C.t4,fontSize:11,fontWeight:500,textDecoration:"underline"}}>EULA</button>
+      <button onClick={()=>window.open("https://zentry07.github.io/autolens-app/privacy.html","_blank")} style={{background:"none",border:"none",color:C.t4,fontSize:11,fontWeight:500,textDecoration:"underline"}}>Privacy</button>
+      <button onClick={()=>window.open("https://zentry07.github.io/autolens-app/terms.html","_blank")} style={{background:"none",border:"none",color:C.t4,fontSize:11,fontWeight:500,textDecoration:"underline"}}>Terms</button>
+      <button onClick={()=>window.open("https://zentry07.github.io/autolens-app/eula.html","_blank")} style={{background:"none",border:"none",color:C.t4,fontSize:11,fontWeight:500,textDecoration:"underline"}}>EULA</button>
     </div>
     <button onClick={async()=>{try{const info=await payments.restorePurchases();if(info?.isPremium){savePro();setPay(false);showTst("Purchases restored!")}else{showTst("No active subscription found.")}}catch{showTst("Could not restore. Try again.")}}} style={{display:"block",margin:"12px auto 0",background:"none",border:"none",color:C.t4,fontSize:12,fontWeight:500}}>Restore Purchases</button>
     </div>{/* close padding div */}
@@ -352,7 +352,7 @@ export function App(){
       <div onClick={async()=>{try{window.open("https://apps.apple.com/account/subscriptions","_blank")}catch{}showTst("Opening subscription management...")}} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 0",cursor:"pointer"}}><span style={{fontSize:14,color:C.t2}}>Manage Subscription</span>{Ic.right(16,C.t5)}</div>
     </Card>
     <Card style={{marginBottom:12}}>
-      {[["Privacy Policy","https://autolens.app/privacy"],["Terms of Service","https://autolens.app/terms"],["End User License Agreement","https://autolens.app/eula"],["Contact Support","mailto:support@autolens.app"],["Rate on App Store","https://apps.apple.com/app/autolens/id6759729366?action=write-review"]].map(([l,url],i,a)=>(
+      {[["Privacy Policy","https://zentry07.github.io/autolens-app/privacy.html"],["Terms of Service","https://zentry07.github.io/autolens-app/terms.html"],["End User License Agreement","https://zentry07.github.io/autolens-app/eula.html"],["Contact Support","mailto:support@autolens.app"],["Rate on App Store","https://apps.apple.com/app/autolens/id6759729366?action=write-review"]].map(([l,url],i,a)=>(
         <div key={i} onClick={()=>{window.open(url,"_blank")}} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 0",borderBottom:i<a.length-1?`1px solid ${C.border}`:"none",cursor:"pointer"}}><span style={{fontSize:14,color:C.t2}}>{l}</span>{Ic.right(16,C.t5)}</div>
       ))}
     </Card>
