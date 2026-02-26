@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.autolens.app',
+  appId: 'com.autolensai.app',
   appName: 'AutoLens',
   webDir: 'dist',
   plugins: {
