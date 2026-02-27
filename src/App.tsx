@@ -4,11 +4,23 @@ import * as payments from "./services/payments";
 import * as analytics from "./services/analytics";
 import * as haptics from "./services/haptics";
 /* ═══ API & Stubs ═══ */
+const API_PROXY_URL = import.meta.env.VITE_API_PROXY_URL || "";
 const apiCall=async({messages,system,max_tokens=3000}:{messages:any;system?:string;max_tokens?:number})=>{
-  const key=import.meta.env.VITE_ANTHROPIC_API_KEY;
-  if(!key){throw new Error("API key not configured. Add VITE_ANTHROPIC_API_KEY to your .env file.")}
   const body:any={messages,max_tokens,model:"claude-sonnet-4-20250514"};
   if(system)body.system=system;
+  // Use backend proxy (Supabase Edge Function) to keep API key server-side
+  if(API_PROXY_URL){
+    const r=await fetch(API_PROXY_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(body)
+    });
+    if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e?.error?.message||`API error ${r.status}`)}
+    return r.json()
+  }
+  // Fallback: direct call for local development only
+  const key=import.meta.env.VITE_ANTHROPIC_API_KEY;
+  if(!key){throw new Error("API key not configured. Set VITE_API_PROXY_URL for production or VITE_ANTHROPIC_API_KEY for local dev.")}
   const r=await fetch("https://api.anthropic.com/v1/messages",{
     method:"POST",
     headers:{
@@ -283,11 +295,11 @@ export function App(){
     <div style={{padding:"0 18px",marginTop:-14,position:"relative",zIndex:2}}>
     {/* Plan toggle */}
     <div style={{display:"flex",gap:8,marginBottom:14}} className="ani">
-      {[["yr","Annual","$99","/yr","SAVE 17%"],["mo","Monthly","$10","/mo",""]].map(([id,l,p,per,badge])=><button key={id} onClick={()=>setPlan(id)} style={{flex:1,padding:"12px 10px",borderRadius:14,border:plan===id?`2px solid ${C.gold}`:`1px solid ${C.border}`,background:plan===id?C.gBg:C.white,position:"relative",textAlign:"left"}}>
+      {[["yr","Annual","$79.99","/yr","SAVE 33%"],["mo","Monthly","$9.99","/mo",""]].map(([id,l,p,per,badge])=><button key={id} onClick={()=>setPlan(id)} style={{flex:1,padding:"12px 10px",borderRadius:14,border:plan===id?`2px solid ${C.gold}`:`1px solid ${C.border}`,background:plan===id?C.gBg:C.white,position:"relative",textAlign:"left"}}>
         {badge&&<span style={{position:"absolute",top:-8,right:8,padding:"2px 8px",borderRadius:8,background:"linear-gradient(135deg,#c8a24e,#d4b05e)",color:"#4a3510",fontSize:9,fontWeight:800}}>{badge}</span>}
         <div style={{fontSize:11,color:C.t3,marginBottom:2}}>{l}</div>
         <div style={{fontSize:22,fontWeight:800}}>{p}<span style={{fontSize:12,fontWeight:400,color:C.t4}}>{per}</span></div>
-        {id==="yr"&&<div style={{fontSize:11,color:C.g,fontWeight:600}}>= $8.25/mo</div>}
+        {id==="yr"&&<div style={{fontSize:11,color:C.g,fontWeight:600}}>= $6.67/mo</div>}
       </button>)}
     </div>
     {/* Free vs Pro */}
@@ -308,7 +320,7 @@ export function App(){
       <p style={{fontSize:12,color:C.t3,lineHeight:1.5,marginTop:4}}>Pro includes walk-away prices, depreciation forecasts, and negotiation tips so you never overpay for a car.</p>
     </Card>
     <button onClick={async()=>{analytics.trackPurchaseStart(plan);try{const offerings=await payments.getOfferings();const pkg=offerings?.current?.availablePackages?.find((p:any)=>plan==="yr"?p.identifier==="$rc_annual":p.identifier==="$rc_monthly")||offerings?.current?.availablePackages?.[0];if(pkg){await payments.purchasePackage(pkg);savePro();setPay(false);showTst("Pro activated! Enjoy unlimited scans.")}else{showTst("Products loading... try again.")}}catch(e:any){if(e.message?.includes("cancel")||e.userCancelled){}else{showTst("Purchase failed. Try again.");crash.report(e,{action:"purchase"})}}}} style={{width:"100%",height:56,borderRadius:28,border:"none",background:"linear-gradient(135deg,#c8a24e,#e0c56e,#c8a24e)",backgroundSize:"200% 200%",animation:"gradientShift 3s ease infinite",color:"#4a3510",fontSize:16,fontWeight:800,boxShadow:"0 4px 20px rgba(200,162,78,.3)"}}>Start 7-Day Free Trial</button>
-    <p style={{textAlign:"center",color:C.t4,fontSize:11,marginTop:10}}>Cancel anytime · No charge for 7 days · {plan==="yr"?"$99/year after trial":"$10/month after trial"}</p>
+    <p style={{textAlign:"center",color:C.t4,fontSize:11,marginTop:10}}>Cancel anytime · No charge for 7 days · {plan==="yr"?"$79.99/year after trial":"$9.99/month after trial"}</p>
     <p style={{textAlign:"center",color:C.t5,fontSize:10,marginTop:6,lineHeight:1.5,padding:"0 10px"}}>Subscription automatically renews unless canceled at least 24 hours before the end of the current period. Your Apple ID account will be charged for renewal within 24 hours prior to the end of the current period. You can manage and cancel subscriptions in your Account Settings on the App Store. Free trial converts to paid subscription.</p>
     <div style={{display:"flex",justifyContent:"center",gap:12,marginTop:10}}>
       <button onClick={()=>window.open("https://zentry07.github.io/autolens-app/privacy.html","_blank")} style={{background:"none",border:"none",color:C.t4,fontSize:11,fontWeight:500,textDecoration:"underline"}}>Privacy</button>
@@ -521,6 +533,10 @@ export function App(){
               <div style={{fontSize:15,fontWeight:800,color:R.should_buy?.verdict==="Yes"?"#15803d":"#92400e"}}>{R.should_buy?.verdict==="Yes"?"Buy It":"Think Twice"}</div>
               <p style={{fontSize:12,color:C.t3,lineHeight:1.4,marginTop:2}}>{R.should_buy?.reason}</p>
             </div>
+          </div>
+          {/* AI Disclaimer */}
+          <div style={{padding:"8px 12px",borderRadius:10,background:"rgba(100,116,139,.06)",marginTop:8}}>
+            <p style={{fontSize:10,color:C.t4,lineHeight:1.5,textAlign:"center"}}>AI-generated estimates for informational purposes only. Verify all data with a dealer or mechanic before making purchase decisions.</p>
           </div>
         </Card>
         {/* Quick stats strip */}

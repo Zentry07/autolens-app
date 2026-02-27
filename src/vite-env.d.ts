@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
+  readonly VITE_API_PROXY_URL: string;
   readonly VITE_ANTHROPIC_API_KEY: string;
   readonly VITE_REVENUECAT_API_KEY: string;
   readonly VITE_FIREBASE_API_KEY: string;
